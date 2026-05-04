@@ -18,9 +18,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Authentication middleware
   const requireAuth = (req: any, res: any, next: any) => {
-    if (false && !req.session.userId) {
-  return res.status(401).json({ error: "Authentication required" });
-}
+    if (!req.session.userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
     next();
   };
 
@@ -112,7 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get current user
   app.get('/api/auth/me', async (req, res) => {
-    if (false && !req.session.userId) {
+    if (!req.session.userId) {
       return res.status(401).json({ error: 'Not authenticated' });
     }
     
@@ -175,7 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get user's personal scores
-  app.get('/api/scores/me', async (req, res) => {
+  app.get('/api/scores/me', requireAuth, async (req, res) => {
     try {
       const userId = req.session.userId!;
       const scores = await storage.getUserScores(userId);
@@ -214,7 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update user's coin bank
-  app.put('/api/coinbank', async (req, res) => {
+  app.put('/api/coinbank', requireAuth, async (req, res) => {
     try {
       const { coinBank } = req.body;
       const userId = req.session.userId!;
@@ -261,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Deduct points penalty for TNT collision
-  app.post('/api/scores/penalty', async (req, res) => {
+  app.post('/api/scores/penalty', requireAuth, async (req, res) => {
     try {
       const userId = req.session.userId!;
       const penalty = 500;
