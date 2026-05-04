@@ -175,7 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get user's personal scores
-  app.get('/api/scores/me', requireAuth, async (req, res) => {
+  app.get('/api/scores/me', async (req, res) => {
     try {
       const userId = req.session.userId!;
       const scores = await storage.getUserScores(userId);
@@ -214,7 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update user's coin bank
-  app.put('/api/coinbank', requireAuth, async (req, res) => {
+  app.put('/api/coinbank', async (req, res) => {
     try {
       const { coinBank } = req.body;
       const userId = req.session.userId!;
@@ -261,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Deduct points penalty for TNT collision
-  app.post('/api/scores/penalty', requireAuth, async (req, res) => {
+  app.post('/api/scores/penalty', async (req, res) => {
     try {
       const userId = req.session.userId!;
       const penalty = 500;
